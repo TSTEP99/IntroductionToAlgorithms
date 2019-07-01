@@ -30,40 +30,44 @@ def memoized_cut_rod_aux(prices,n,r):
 			
 	
 def memoized_cut_rod(prices,n):
+	"""A top down memoized approach to rot cutting"""
 	r=[float("-inf") for i in range(n)]; #initializes array for helper function
 	
-	return memoized_cut_rod_aux(prices,n,r); #
+	return memoized_cut_rod_aux(prices,n,r); #Returns the values of the auxilary function
 	
 def bottom_up_cut_rod(prices,n):
-	r=[ float("-inf") for i in range(n+1)]
-	r[0]=0;
-	for i in range(1,n+1):
-		maximum=float("-inf")
-		for j in range(1,i+1):
+	"""Bottom up memoized approach torod cutting"""
+	r=[ float("-inf") for i in range(n+1)] #initializes array to track cost
+	r[0]=0; # initlizas rod of length 0 to price of length 0
+	for i in range(1,n+1):# loops through rods from 1 to n
+		maximum=float("-inf")#set maximum to negative infinity
+		for j in range(1,i+1): # computes max rpice for rod that is cut up
 			maximum=max(maximum,prices[j-1]+r[i-j])
-		r[i]=maximum
-	return r[n];
+		r[i]=maximum #sets r to maximum value
+	return r[n]; # returns the maximum value
 			
 def extended_bottom_up_cut_rod(prices,n):
-	s=[float("-inf") for i in range(n+1)];
-	r=[float("-inf") for i in range(n+1)];
-	r[0]=0;
+	"""Bottom up approach that allows the optimal solution to be reordered"""
+	s=[float("-inf") for i in range(n+1)]; #array for the optimal cut
+	r=[float("-inf") for i in range(n+1)]; #intilizes array to track cost
+	r[0]=0; # initializes length of 0 to 0 cost
 	for i in range(1,n+1):
-		maximum=float("-inf");
+		maximum=float("-inf"); #Initializes maximum value to negative infinity
 		for j in range(1,n+1):
-			if(prices[j-1]+r[i-j]>maximum):
+			if(prices[j-1]+r[i-j]>maximum):# changes maximum value based on calculated cost
 				maximum=prices[j-1]+r[i-j];
 				s[i]=j;
 			
-		r[i]=maximum;
+		r[i]=maximum; #sets stored value to maximum price
 	return r,s;
 
 def print_cut_rod(prices,n):
-	r,s=extended_bottom_up_cut_rod(prices,n)
-	while n>=1:
-		print(s[n],end=" ");
+	"""Prints the optimal solution returned by extened_bottum_cut_up"""
+	r,s=extended_bottom_up_cut_rod(prices,n) #loops through optimal solution to print it
+	while n>=1: # Prints until the pieces
+		print(s[n],end=" "); #prints the piece size out onto the same line
 		n=n-s[n];
 
-print_cut_rod(prices,len(prices));
+print_cut_rod(prices,len(prices)); #prints the solution for a rod of length 8 given the prices above
 
 			
